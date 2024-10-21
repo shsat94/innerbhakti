@@ -6,7 +6,7 @@ import 'audio_player_screen.dart';
 class ProgramDetailsScreen extends StatefulWidget {
   final String programId;
 
-  const ProgramDetailsScreen({super.key, required this.programId});
+  ProgramDetailsScreen({required this.programId});
 
   @override
   _ProgramDetailsScreenState createState() => _ProgramDetailsScreenState();
@@ -37,7 +37,7 @@ class _ProgramDetailsScreenState extends State<ProgramDetailsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Program Details'),
+        title: Text('Program Details'),
       ),
       body: ListView.builder(
         itemCount: tracks.length,
@@ -46,11 +46,17 @@ class _ProgramDetailsScreenState extends State<ProgramDetailsScreen> {
             title: Text(tracks[index]['name']),
             subtitle: Text(tracks[index]['duration']),
             onTap: () {
+              // Prepare the track URLs and pass them to the AudioPlayerScreen
+              List<String> trackUrls = tracks
+                  .map<String>((track) => track['audioUrl'].toString())
+                  .toList();
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) =>
-                      AudioPlayerScreen(trackUrl: tracks[index]['audioUrl']),
+                  builder: (context) => AudioPlayerScreen(
+                    trackUrls: trackUrls,
+                    initialIndex: index, // Start with the selected track
+                  ),
                 ),
               );
             },
